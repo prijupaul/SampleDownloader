@@ -1,0 +1,7 @@
+
+<resources>
+
+    <integer name="default_image_width">408</integer>
+    <integer name="default_image_height">300</integer>
+
+</resources>

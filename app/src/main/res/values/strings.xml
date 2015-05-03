@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Pactera Sample</string>
+    <string name="download_error">Download failed..Please try again.</string>
+
+</resources>

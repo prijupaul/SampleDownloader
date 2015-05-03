@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Callback;
@@ -71,7 +72,7 @@ public class DownloadItemAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder viewHolder;
+        final ViewHolder viewHolder;
         View vi = null;
 
         if(vi == null){
@@ -86,10 +87,32 @@ public class DownloadItemAdapter extends BaseAdapter {
         vi = convertView;
 
         String title = mRowItems.get(position).getTitle();
-        String imageUrl = mRowItems.get(position).getImageHref();
-        String description = mRowItems.get(position).getDescription();
+        final String description = mRowItems.get(position).getDescription();
+
         viewHolder.mTitle.setText(title);
-        viewHolder.mDescription.setText(description);
+        if(description!=null) {
+            viewHolder.mDescriptionOnly.setText(description);
+        }
+        viewHolder.mDescriptionOnly.setVisibility(View.VISIBLE);
+
+        loadImage(viewHolder,position);
+        return vi;
+    }
+
+
+    /**
+     * loadImage using Picasso library
+     * @param viewHolder
+     * @param view
+     * @param position
+     */
+
+    private void loadImage(final ViewHolder viewHolder,int position){
+
+
+        String imageUrl = mRowItems.get(position).getImageHref();
+        final String description = mRowItems.get(position).getDescription();
+
         Picasso.with(mContext)
                 .load(imageUrl)
                 .placeholder(R.drawable.abc_item_background_holo_dark)
@@ -97,16 +120,18 @@ public class DownloadItemAdapter extends BaseAdapter {
                 .into(viewHolder.mImageView, new Callback() {
                     @Override
                     public void onSuccess() {
+                        viewHolder.mDescriptionOnly.setVisibility(View.GONE);
+                        viewHolder.mLLTextImageView.setVisibility(View.VISIBLE);
+                        viewHolder.mDescription.setText(description);
 
                     }
-
                     @Override
                     public void onError() {
                         // Failed to download image
+
                     }
                 });
 
-        return vi;
     }
 
     public static class ViewHolder{
@@ -116,6 +141,10 @@ public class DownloadItemAdapter extends BaseAdapter {
         ImageView mImageView;
         @InjectView(R.id.description)
         TextView mDescription;
+        @InjectView(R.id.layout_with_text_imageView)
+        LinearLayout mLLTextImageView;
+        @InjectView(R.id.descriptionOnly)
+        TextView mDescriptionOnly;
 
         public ViewHolder(View view) {
             ButterKnife.inject(this, view);
